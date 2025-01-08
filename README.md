@@ -1,100 +1,76 @@
-# Welcome to React Router!
+# Bug report
 
-A modern, production-ready template for building full-stack React applications using React Router.
+I'm using React Router as a...
+framework
 
-[![Open in StackBlitz](https://developer.stackblitz.com/img/open_in_stackblitz.svg)](https://stackblitz.com/github/remix-run/react-router-templates/tree/main/default)
+## Reproduction
 
-## Features
+https://github.com/alicerocheman/rrouter-bug-alias
+clone, install and run "yarn dev"
 
-- 🚀 Server-side rendering
-- ⚡️ Hot Module Replacement (HMR)
-- 📦 Asset bundling and optimization
-- 🔄 Data loading and mutations
-- 🔒 TypeScript by default
-- 🎉 TailwindCSS for styling
-- 📖 [React Router docs](https://reactrouter.com/)
+this repo has very few changes after "npx create-react-router@latest":
 
-## Getting Started
+created app/constants/config.ts
+created app/utils/safeLog.ts
+imported app/utils/safeLog in the app/routes.ts file.
+optionnally:
 
-### Installation
+add alias to vite.config.ts
 
-Install the dependencies:
+## System Info
 
-```bash
-npm install
-```
+System:
+    OS: macOS 15.1.1
+    CPU: (12) x64 Intel(R) Core(TM) i7-9750H CPU @ 2.60GHz
+    Memory: 40.73 MB / 16.00 GB
+    Shell: 5.9 - /bin/zsh
+  Binaries:
+    Node: 20.16.0 - ~/.nvm/versions/node/v20.16.0/bin/node
+    Yarn: 1.22.22 - /usr/local/bin/yarn
+    npm: 10.8.1 - ~/.nvm/versions/node/v20.16.0/bin/npm
+    pnpm: 9.15.3 - ~/.nvm/versions/node/v20.16.0/bin/pnpm
+  Browsers:
+    Chrome: 131.0.6778.206
+    Safari: 18.1.1
+  npmPackages:
+    @react-router/dev: ^7.1.1 => 7.1.1 
+    @react-router/node: ^7.1.1 => 7.1.1 
+    @react-router/serve: ^7.1.1 => 7.1.1 
+    react-router: ^7.1.1 => 7.1.1 
+    vite: ^5.4.11 => 5.4.11
 
-### Development
+## Used Package Manager
 
-Start the development server with HMR:
+yarn
 
-```bash
-npm run dev
-```
+## Expected Behavior
 
-Your application will be available at `http://localhost:5173`.
+the app works, even when the "~" alias is used in "app/routes.ts" or in one of its imports
 
-## Building for Production
+## Actual Behavior
 
-Create a production build:
+if the "~" alias is used in "routes.ts" or in one of its imports, "yarn dev" fails like this:
 
-```bash
-npm run build
-```
-
-## Deployment
-
-### Docker Deployment
-
-This template includes three Dockerfiles optimized for different package managers:
-
-- `Dockerfile` - for npm
-- `Dockerfile.pnpm` - for pnpm
-- `Dockerfile.bun` - for bun
-
-To build and run using Docker:
-
-```bash
-# For npm
-docker build -t my-app .
-
-# For pnpm
-docker build -f Dockerfile.pnpm -t my-app .
-
-# For bun
-docker build -f Dockerfile.bun -t my-app .
-
-# Run the container
-docker run -p 3000:3000 my-app
-```
-
-The containerized application can be deployed to any platform that supports Docker, including:
-
-- AWS ECS
-- Google Cloud Run
-- Azure Container Apps
-- Digital Ocean App Platform
-- Fly.io
-- Railway
-
-### DIY Deployment
-
-If you're familiar with deploying Node applications, the built-in app server is production-ready.
-
-Make sure to deploy the output of `npm run build`
+[15:20:12] yarn dev
+yarn run v1.22.22
+$ react-router dev
+Error: Route config in "routes.ts" is invalid.
 
 ```
-├── package.json
-├── package-lock.json (or pnpm-lock.yaml, or bun.lockb)
-├── build/
-│   ├── client/    # Static assets
-│   └── server/    # Server-side code
+Error: Failed to load url ~/utils/safeLog (resolved id: ~/utils/safeLog) in /Users/***/***/rrouter-bug-repro/app/routes.ts. Does the file exist?
+    at loadAndTransform (file:///***/rrouter-bug-repro/node_modules/vite/dist/node/chunks/dep-CB_7IfJ-.js:51920:17)
+    at createConfigLoader (/***/rrouter-bug-repro/node_modules/@react-router/dev/dist/vite.js:462:11)
+    at config (/***/rrouter-bug-repro/node_modules/@react-router/dev/dist/vite.js:1699:35)
+    at runConfigHook (file:///***/rrouter-bug-repro/node_modules/vite/dist/node/chunks/dep-CB_7IfJ-.js:66720:19)
+    at resolveConfig (file:///***/rrouter-bug-repro/node_modules/vite/dist/node/chunks/dep-CB_7IfJ-.js:66169:12)
+    at _createServer (file:///***/rrouter-bug-repro/node_modules/vite/dist/node/chunks/dep-CB_7IfJ-.js:62758:18)
+    at dev (/***/rrouter-bug-repro/node_modules/@react-router/dev/dist/cli/index.js:1288:16)
+    at dev2 (/***/rrouter-bug-repro/node_modules/@react-router/dev/dist/cli/index.js:1459:3)
+    at run2 (/***/rrouter-bug-repro/node_modules/@react-router/dev/dist/cli/index.js:1720:7)
+error Command failed with exit code 1.
+info Visit https://yarnpkg.com/en/docs/cli/run for documentation about this command.
 ```
 
-## Styling
+if i import "./utils/safeLog" with a relative path, it still fails because "./utils/safeLog" also uses the alias.
 
-This template comes with [Tailwind CSS](https://tailwindcss.com/) already configured for a simple default starting experience. You can use whatever CSS framework you prefer.
-
----
-
-Built with ❤️ using React Router.
+The same behavior happens whether or not i set the alias in the vite.config file.
